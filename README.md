@@ -1,6 +1,6 @@
 # AI-Arduino-Aimbot
 
-AI-Arduino-Aimbot is a custom aimbot solution using a combination of AI (specifically YOLO for object detection) and Arduino for precise mouse control. It captures the screen, processes it through a trained AI model (ONNX format), and uses Arduino to control the mouse cursor, simulating an aimbot functionality.
+AI-Arduino-Aimbot is a custom aimbot solution using a combination of AI (specifically YOLO for object detection) and Arduino for precise mouse control. It captures the screen, processes it through a trained AI model (PyTorch format), and uses Arduino to control the mouse cursor, simulating an aimbot functionality.
 
 This project is ideal for integrating AI-powered aimbot functionality into your system, where the AI model can track and target specific objects on the screen, and the Arduino handles the mouse movements and actions.
 
@@ -29,8 +29,7 @@ This project is ideal for integrating AI-powered aimbot functionality into your 
 You can install the required libraries using `pip`:
 
 ```bash
-pip install opencv-python mss onnxruntime keyboard numpy colorama
-pip install ultralytics  # If using YOLO
+pip install opencv-python mss ultralytics keyboard numpy colorama
 ```
 ### Usage
 ```bash
