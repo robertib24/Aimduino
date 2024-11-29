@@ -17,7 +17,7 @@ class Game:
         # Use mss for screen capture
         self.sct = mss.mss()  # Screen capture
         self.mouse = MouseInstruct.getMouse(VID, PID, PING_CODE)
-        self.model = YOLO('./best_8s.pt').to('cuda')  # Run on CPU or CUDA as needed
+        self.model = YOLO('./best.pt').to('cuda')  # Run on CPU or CUDA as needed
 
     def get_xy(self):
         # Capture a portion of the screen
