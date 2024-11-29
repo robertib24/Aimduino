@@ -35,3 +35,6 @@ pip install ultralytics  # If using YOLO
 ### Usage
 ```bash
 python sss.py --vid <Arduino VID> --pid <Arduino PID> --pcode <Ping Code from your Arduino Firmware>
+```
+### License
+This project is licensed under the MIT License.
