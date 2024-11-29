@@ -31,3 +31,7 @@ You can install the required libraries using `pip`:
 ```bash
 pip install opencv-python mss onnxruntime keyboard numpy colorama
 pip install ultralytics  # If using YOLO
+```
+### Usage
+```bash
+python sss.py --vid <Arduino VID> --pid <Arduino PID> --pcode <Ping Code from your Arduino Firmware>
