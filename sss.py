@@ -79,6 +79,7 @@ class Game:
         return dx, dy
 
     def update(self):
+
         while True:
             if keyboard.is_pressed('o'):
                 self.sct.close()  # Close screen capture
