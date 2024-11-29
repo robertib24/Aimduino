@@ -1,64 +1,42 @@
+from enum import Enum
 import hid
-import time
 
-MOUSE_LEFT = 0x01
-MOUSE_RIGHT = 0x02
-MOUSE_MIDDLE = 0x04
+MOUSE_LEFT = 1
+MOUSE_RIGHT = 2
+MOUSE_MIDDLE = 4
 MOUSE_ALL = MOUSE_LEFT | MOUSE_RIGHT | MOUSE_MIDDLE
 
-
-class DeviceNotFoundError(Exception):
-    pass
-
-
 class MouseInstruct:
-    def __init__(self, device):
-        self._buttons_mask = 0x0
-        self._device = device
+    def __init__(self, dev):
+        self._buttons_mask = 0
+        self._dev = dev
         self.move(0, 0)
 
     @classmethod
-    def get_mouse(cls, vid=None, pid=None, ping_code=None):
-        device = find_mouse_device(vid, pid, ping_code)
-        if not device:
+    def getMouse(cls, vid=0, pid=0, ping_code=0xf9):
+        dev = find_mouse_device(vid, pid, ping_code)
+        if not dev:
             vid_str = hex(vid) if vid else "Unspecified"
             pid_str = hex(pid) if pid else "Unspecified"
             ping_code_str = hex(ping_code) if pid else "Unspecified"
-            error_msg = f"[-] Device VID: {vid_str} PID: {pid_str} Ping code: {ping_code_str} not found!"
+            error_msg = ("[-] Device "
+                        f"Vendor ID: {vid_str}, Product ID: {pid_str} "
+                        f"Pingcode: {ping_code_str} not found!")
             raise DeviceNotFoundError(error_msg)
-        return cls(device)
+        return cls(dev)
 
     def _buttons(self, buttons):
         if buttons != self._buttons_mask:
             self._buttons_mask = buttons
             self.move(0, 0)
 
-    def _make_report(self, x, y):
-        report_data = [
-            0x01, # Report ID: 0
-            self._buttons_mask,
-            x & 0xFF, (x >> 8) & 0xFF,
-            y & 0xFF, (y >> 8) & 0xFF
-        ]
-        return report_data
-
-    def _send_raw_report(self, report_data):
-        self._device.write(report_data)
-
-    def click(self, button=MOUSE_LEFT):
+    def click(self, button = MOUSE_LEFT):
         self._buttons_mask = button
         self.move(0, 0)
         self._buttons_mask = 0
         self.move(0, 0)
 
-    def silent_flick(self, x, y, button=MOUSE_LEFT):
-        self._buttons_mask = button
-        self.move(x, y)
-        time.sleep(0.006)
-        self._buttons_mask = 0
-        self.move(-x, -y)
-
-    def press(self, button=MOUSE_LEFT):
+    def press(self, button = MOUSE_LEFT):
         self._buttons(self._buttons_mask | button)
 
     def release(self, button = MOUSE_LEFT):
@@ -68,8 +46,25 @@ class MouseInstruct:
         return bool(button & self._buttons_mask)
 
     def move(self, x, y):
-        self._send_raw_report(self._make_report(limit_xy(x), limit_xy(y)))
+        limited_x = limit_xy(x)
+        limited_y = limit_xy(y)
+        self._sendRawReport(self._makeReport(limited_x, limited_y))
 
+    def _makeReport(self, x, y):
+        report_data = [
+                            0x01,   # Report ID: 0
+                            self._buttons_mask,
+                            low_byte(x), high_byte(x),
+                            low_byte(y), high_byte(y)
+                        ]
+        return report_data
+
+
+    def _sendRawReport(self, report_data):
+        self._dev.write(report_data)
+
+class DeviceNotFoundError(Exception):
+        pass
 
 def check_ping(dev, ping_code):
     dev.write([0, ping_code])
@@ -81,21 +76,15 @@ def check_ping(dev, ping_code):
         return resp and resp[0] == ping_code
 
 def find_mouse_device(vid, pid, ping_code):
-    device = hid.device()
+    dev = hid.device()
     for dev_info in hid.enumerate(vid, pid):
-        device.open_path(dev_info['path'])
-        found = check_ping(device, ping_code)
+        dev.open_path(dev_info['path'])
+        found = check_ping(dev, ping_code)
         if found:
-            return device
+            return dev
         else:
-            device.close()
+            dev.close()
     return None
-
-def low_byte(x):
-    return x & 0xFF
-
-def high_byte(x):
-    return (x >> 8) & 0xFF
 
 def limit_xy(xy):
     if xy < -32767:
@@ -103,3 +92,9 @@ def limit_xy(xy):
     elif xy > 32767:
         return 32767
     else: return xy
+
+def low_byte(x):
+    return x & 0xFF
+
+def high_byte(x):
+    return (x >> 8) & 0xFF

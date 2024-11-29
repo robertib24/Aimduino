@@ -16,12 +16,12 @@ class Game:
     def __init__(self, VID, PID, PING_CODE):
         # Use mss for screen capture
         self.sct = mss.mss()  # Screen capture
-        self.mouse = MouseInstruct.get_mouse(VID, PID, PING_CODE)
-        self.model = YOLO('./best.pt').to('cpu')  # Run on CPU or CUDA as needed
+        self.mouse = MouseInstruct.getMouse(VID, PID, PING_CODE)
+        self.model = YOLO('./best_8s.pt').to('cuda')  # Run on CPU or CUDA as needed
 
     def get_xy(self):
         # Capture a portion of the screen
-        monitor = {"top": 220, "left": 640, "width": 640, "height": 640}
+        monitor = {"top": 220, "left": 640, "width": 1280, "height": 860}
         screenshot = self.sct.grab(monitor)
         frame = np.array(screenshot)
         frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2RGB)  # Convert to RGB
