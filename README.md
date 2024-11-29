@@ -21,7 +21,6 @@ This project is ideal for integrating AI-powered aimbot functionality into your 
 - **Python 3.x**
 - **OpenCV**
 - **mss** (for screen capture)
-- **ONNX Runtime**
 - **Ultralytics YOLO model** (for target detection)
 - **keyboard library** (for keyboard input handling)
 
