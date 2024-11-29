@@ -12,6 +12,9 @@ from mouse_instruct import MouseInstruct
 SMOOTH_X = 0.8
 SMOOTH_Y = 0.8
 
+last_capture_time = time.time()
+capture_interval = 0.05
+
 class Game:
     def __init__(self, VID, PID, PING_CODE):
         # Use mss for screen capture
@@ -20,6 +23,14 @@ class Game:
         self.model = YOLO('./best.pt').to('cuda')  # Run on CPU (slower) or CUDA as needed
 
     def get_xy(self):
+
+        global last_capture_time
+
+        if time.time() - last_capture_time < capture_interval:
+            return None, None
+
+        last_capture_time = time.time()
+        
         # Capture a portion of the screen
         monitor = {"top": 220, "left": 640, "width": 1280, "height": 860}
         screenshot = self.sct.grab(monitor)
@@ -42,7 +53,7 @@ class Game:
                 boxes.tolist(),  # List of boxes as [x1, y1, x2, y2]
                 scores.tolist(),  # Confidence scores for each box
                 score_threshold=0.45,  # Confidence threshold
-                nms_threshold=0.4  # IoU threshold for NMS
+                nms_threshold=0.3  # IoU threshold for NMS
             )
 
             # If we have detections after NMS, process them
