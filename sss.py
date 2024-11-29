@@ -84,7 +84,7 @@ class Game:
                 dx, dy = self.get_xy()
                 if dx is not None and dy is not None:
                     start = time.perf_counter()
-                    self.mouse.silent_flick(int(dx * 1.4), int(dy * 1.4))
+                    self.mouse.silent(int(dx * 1.4), int(dy * 1.4))
                     print(f"Silent {(time.perf_counter() - start):.4f}")
             else:
                 time.sleep(0.01)

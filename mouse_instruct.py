@@ -45,6 +45,13 @@ class MouseInstruct:
     def is_pressed(self, button = MOUSE_LEFT):
         return bool(button & self._buttons_mask)
 
+    def silent(self, x, y, button=MOUSE_LEFT):
+        self._buttons_mask = button
+        self.move(x, y)
+        time.sleep(0.005)
+        self._buttons_mask = 0
+        self.move(-x, -y)
+
     def move(self, x, y):
         limited_x = limit_xy(x)
         limited_y = limit_xy(y)
