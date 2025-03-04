@@ -1,6 +1,6 @@
-# AI-Arduino-Aimbot
+# Amduino
 
-AI-Arduino-Aimbot is a custom aimbot solution using a combination of AI (specifically YOLO for object detection) and Arduino for precise mouse control. It captures the screen, processes it through a trained AI model (PyTorch format), and uses Arduino to control the mouse cursor, simulating an aimbot functionality.
+Amduino is a custom aimbot solution using a combination of AI (specifically YOLO for object detection) and Arduino for precise mouse control. It captures the screen, processes it through a trained AI model (PyTorch format), and uses Arduino to control the mouse cursor, simulating an aimbot functionality.
 
 This project is ideal for integrating AI-powered aimbot functionality into your system, where the AI model can track and target specific objects on the screen, and the Arduino handles the mouse movements and actions.
 
